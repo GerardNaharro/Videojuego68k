@@ -14,7 +14,7 @@ LIFEINIT
 ;MODIFIES   -   D6.B   
 ;-----------------------------------------------------------
 
-            MOVE.B #3,D6
+            MOVE.B #3,D6        ;3 LIFES
             RTS
             
             
@@ -38,12 +38,102 @@ LIFEPLOT
 ;MODIFIES   -   NONE   
 ;-----------------------------------------------------------
 
+            ;PAINT ALL THE FULL HEARTS
+            MOVEM.L D0-D7/A0-A1,-(A7)      ;STACK REGISTERS
+            SUBQ.B  #1,D6                  ;-1 FOR THE DBRA
+            LEA HEART,A0
+            MOVE.W #601,D3                 ;X WHERE TO STOP PAINTING
+            MOVE.W #19,D4                  ;Y WHERE TO STOP PAINTING
+
+            CLR.L D1
+            CLR.L D2
+            MOVE.W #589,D1                 ;X WHERE TO START PAINTING
+            CLR.L D5
+            MOVE.W D1,D5                   ;COPY THE INITIAL X
+            MOVE.W #9,D2                   ;Y WHERE TO STOP PAINTING
+
+.LOOP        
+           
+            BRA .COLOR                     ;GET THE COLOR
+.HERE
+            MOVE.W #82,D0
+            TRAP #15                       ;PAINT
+            ADDQ.W #1,D1                   ;NEXT X PIXEL
+            CMP.W D3,D1                    ;IF NOT THE FINAL X PIXEL CONTINUE
+            BLE .LOOP
+            ADDQ.W #1,D2                   ;NEXT Y PIXEL
+            CLR.L D1            
+            MOVE.W D5,D1                   ;INITIAL X PIXEL
+            CMP.W D4,D2                    ;IF NOT THE FINAL Y PIXEL CONTINUE
+            BLE .LOOP            
+            ADD.W #17,D3                   ;NEXT HEART FINAL X
+            ADD.W #17,D1                   ;NEXT HEART INITIAL X
+            MOVE.W D1,D5                   ;COPY THE INITIAL X
+            MOVE.W #9,D2                   ;NEXT HEART INITIAL Y
+            LEA HEART,A0
+            DBRA D6, .LOOP
+            MOVE.B #3,D7                   ;CHECK IF THERE ARE ANY EMPTY HEARTS (DAMAGED)
+            SUB.B D6,D7
+            TST.B D7
+            BGT .BROKEN                     ;PAINT THEM
+            MOVEM.L (A7)+,D0-D7/A0-A1     ;STORE REGISTERS
+            RTS
+            
+.COLOR
+            MOVE.L D1,-(A7)
+            MOVE.L (A0)+,D1
+            MOVE.W #80,D0
+            TRAP #15
+            MOVE.L (A7)+,D1
+            BRA .HERE
+
+
+
+
+.BROKEN     SUBQ.B #1,D7
+            LEA BRKHEART,A0
+
+.LOOP2        
+           
+            BRA .COLOR2
+.HERE2
+            MOVE.W #82,D0
+            TRAP #15
+            ADDQ.W #1,D1
+            CMP.W D3,D1
+            BLE .LOOP2
+            ADDQ.W #1,D2
+            CLR.L D1
+            
+            MOVE.W D5,D1
+
+            CMP.W D4,D2
+            BLE .LOOP2
+            
+            ADD.W #17,D3
+            ADD.W #17,D1
+            MOVE.W D1,D5
+            MOVE.W #9,D2
+            LEA BRKHEART,A0
+            DBRA D7, .LOOP2
+            MOVEM.L (A7)+,D0-D7/A0-A1     ;STORE REGISTERS
+            RTS
+            
+.COLOR2
+            MOVE.L D1,-(A7)
+            MOVE.L (A0)+,D1
+            MOVE.W #80,D0
+            TRAP #15
+            MOVE.L (A7)+,D1
+            BRA .HERE2
+
+
             
             
             
             
             
-.HEART DC.L    $00003,$005017,$005039,$000038,$002024,$002013,$00007,$001013,$001038
+HEART  DC.L    $00003,$005017,$005039,$000038,$002024,$002013,$00007,$001013,$001038
        DC.L    $000040,$000034,$005025,$00007,$000012,$007024,$00573d8b,$0063469c,$00674f97
        DC.L    $000026,$004021,$000027,$00613da7,$006c43bd,$00633fab,$000031,$00e81b,$004036
        DC.L    $00604692,$00684e9c,$00ffe0ff,$00fed8ff,$006038af,$000049,$00653cb6,$00642fcc,$006228d4
@@ -62,7 +152,7 @@ LIFEPLOT
 
 
 
-.BRKHEART DC.L $00333,$00111,$00111,$00000,$00000,$00000,$00222,$00000,$00222
+BRKHEART  DC.L    $00333,$00111,$00111,$00000,$00000,$00000,$00222,$00000,$00222
           DC.L    $00000,$00555,$00000,$00222,$00000,$00222,$005e5e5e,$00646464,$00656565
           DC.L    $00000,$00000,$00333,$00646464,$00646464,$00636363,$00000,$00000,$00000
           DC.L    $00696969,$00ffffff,$00ffffff,$00ffffff,$00ffffff,$00000,$00fcfcfc,$00ffffff,$00ffffff
@@ -82,6 +172,7 @@ LIFEPLOT
 
 
          
+
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

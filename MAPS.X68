@@ -84,7 +84,7 @@ MAP1MATD
 
 ;-----------------------------------------------------------
 MAP2MATD
-;DRAWS THE FIRST MAP FOLLOWING "SCREEN2" MATRIX
+;DRAWS THE SECOND MAP FOLLOWING "SCREEN2" MATRIX
 ;INPUT      -   NONE          
 ;OUTPUT     -   NONE
 ;MODIFIES   -   NONE
@@ -544,6 +544,7 @@ SCREEN1 DC.B 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
         DC.B 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
         
         
+
 
 
 

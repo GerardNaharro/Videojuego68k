@@ -18,6 +18,7 @@
             INCLUDE "MAPS.X68"              ; MAPS MANAGEMENT
             INCLUDE "STATES.X68"            ; STATES MANAGEMENT
             INCLUDE "SOUND.X68"             ; SOUNDS MANAGEMENT
+            INCLUDE "LIFE.X68"              ; LIFE MANAGEMENT
             
 ; --- INITIALIZE --------------------------------------------------------------
 
@@ -27,7 +28,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             ; TO DO : ADD YOUR GAME INITIALIZATION HERE
             JSR STAINIT
             JSR SNDINIT
-
+            JSR LIFEINIT
 
 ; --- UPDATE ------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
 
 
 

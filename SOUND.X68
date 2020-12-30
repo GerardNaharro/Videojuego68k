@@ -19,6 +19,7 @@ SNDINIT
             MOVE.B  #0,D1
             MOVE.B  #2,D2
             MOVE.B  #71,D0
+*            MOVE.B  #74,D0
 .HERE       ADDQ.W  #1,D1
             MOVE.L  (A2)+,D3
             MOVE.L  D3,A1
@@ -46,6 +47,7 @@ SHOTSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #1,D1
             MOVE.B  #72,D0
+*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -60,6 +62,7 @@ JUMPSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #2,D1
             MOVE.B  #72,D0
+*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -74,9 +77,11 @@ INTROSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #3,D1
             MOVE.B  #72,D0
+*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS            
+
 
 
 
