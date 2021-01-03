@@ -17,6 +17,10 @@ EYERY       DS.W    1       ;CHARACTER'S RIGHT EYE Y
 STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
 
+;------MOB VAR-------------------------------------------
+VOLVER  DS.W    1
+MOBXX   DC.W    15,50 ;Provisional      
+MOBN    DS.W    1     ;Provisional
 
 *~Font name~Fixedsys~
 *~Font size~9~
