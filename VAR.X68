@@ -18,7 +18,7 @@ STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
 
 ;------MOB VAR-------------------------------------------
-VOLVER  DS.W    1
+VOLVER  DS.W    1     ;Going forward or backward
 MOBXX   DC.W    15,50 ;Provisional      
 MOBN    DS.W    1     ;Provisional
 
