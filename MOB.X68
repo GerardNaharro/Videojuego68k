@@ -10,9 +10,9 @@
 MOBINIT
 ;INITIALIZE AN ENEMY/MOB
 ;----------------------------------------------------------
-            MOVE.W #MOBX,(A0)
-            MOVE.W #MOBY,2(A0)
-
+            MOVE.W #MOBX,(A0)         ;Por ahora es constante, porque no  
+            MOVE.W #MOBY,2(A0)        ; sabia como hacer que accediese a
+                                      ; un DC, mañana sigo. 
             RTS
             
 ;----------------------------------------------------------
@@ -54,7 +54,7 @@ MOBPLOT
             ADD.W  #MOBLINE/2,D3
             ADD.W  #MOBLINE/2,D4
             MOVE.B #87,D0
-            TRAP    #15
+            TRAP    #15               ;Draw square
             MOVEM.L (A7)+,D0-D4
             RTS
 
