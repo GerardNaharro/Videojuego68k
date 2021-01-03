@@ -32,8 +32,16 @@ STAGOVER    EQU     2            ;GAME OVER STATE
 
 ;------------------------------------------------------------------------------
 
+; --- MOB RELATED CONSTANTS ---------------------------------------------------
 
-
+MOBID    EQU    2                 ;MOB IDENTIFIER
+MOBLINE  EQU    30                ;MOD DIMENSIONS
+MOBSPEED EQU    2                 ;MOB SPEED
+MOBPCOL  EQU    $00FF0000         ;MOB PEN COLOR
+MOBFCOL  EQU    $000000FF         ;MOB FILL COLOR
+MOBY     EQU    15                ;PROVISIONAL
+MOBX     EQU    15                ;PROVISIONAL
+;-------------------------------------------------------------------------------
 
 
 
