@@ -10,17 +10,14 @@
 MOBINIT
 ;INITIALIZE AN ENEMY/MOB
 ;----------------------------------------------------------
-*            MOVE.W #MOBX,(A0)         ;Por ahora es constante, porque no  
-*            MOVE.W #MOBY,2(A0)        ; sabia como hacer que accediese a
-*                                      ; un DC, mañana sigo. 
-
-            MOVEM.L  D1-D2,-(A7)     ;STACK REGISTER
+            MOVEM.L  D1-D2,-(A7)       ;STACK REGISTER
             MOVE.W   #113,(MOBY)
             MOVE.W   (MOBY),D1
             MOVE.W   D1,2(A0)
             MOVE.W   #62,(MOBX)
             MOVE.W   (MOBX),D2
             MOVE.W   D2,(A0)
+            MOVE.W   D2,4(A0)        ;STORING INITIAL POSITION 
             MOVEM.L  (A7)+,D1-D2     ;STORE REGISTER
             RTS
             
@@ -28,21 +25,28 @@ MOBINIT
 
 MOBUPD
 ;----------------------------------------------------------
+            MOVEM.L  D2-D3,-(A7)            ;STACK REGISTER
             CMPI.W  #1,(VOLVER)             ;ONCE REACHED 
             BEQ  .VUELTA
-            CMP.W  #124,(A0)
+            MOVE.W  4(A0),D2
+            ADD.W   #50,D2                  ;OBTAIN MAX. DISTANCE
+            MOVE.W  (A0),D3             
+            CMP.W  D2,D3
             BEQ  .AVOLVER
             ADDQ.W #MOBSPEED,(A0)           ;XVECTOR=XVECTOR+2
-.END            
+.END        
+            MOVEM.L  (A7)+,D2-D3            ;STORE REGISTER
             RTS
-.VUELTA     CMPI.W  #52,(A0)
+.VUELTA     MOVE.W  4(A0),D2
+            MOVE.W  (A0),D3
+            CMP.W  D2,D3
             BEQ  .DEVUELTA
             SUB.W   #MOBSPEED,(A0)          ;XVECTOR=XVECTOR-2
             BRA     .END
 .DEVUELTA   MOVE.W  #0,(VOLVER)
             BRA     .END            
 .AVOLVER    MOVE.W  #1,(VOLVER)            
-            BRA     .END            
+            BRA     .END             
 ;----------------------------------------------------------
 
 MOBPLOT
