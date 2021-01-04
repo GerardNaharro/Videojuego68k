@@ -17,7 +17,7 @@ MOBINIT
             MOVE.W   #62,(MOBX)
             MOVE.W   (MOBX),D2
             MOVE.W   D2,(A0)
-            MOVE.W   D2,4(A0)        ;STORING INITIAL POSITION 
+            MOVE.W   D2,4(A0)        ;STORING INITIAL XVECTOR 
             MOVEM.L  (A7)+,D1-D2     ;STORE REGISTER
             RTS
             
