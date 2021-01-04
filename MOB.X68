@@ -2,9 +2,10 @@
 * Title      : MOB MANAGEMENT(AGENT)
 * AUTHOR     :  Gerard y Lucas
 * COMMENTS   :  MOB VAR.
-*               (A0)=XVECTOR
+*                (A0)=XVECTOR
 *               2(A0)=YVECTOR
 *               4(A0)=INITIAL XVECTOR
+*               6(A0)=BACKWARD(1)/FORWARD(0)
 * Description:
 *-----------------------------------------------------------
 ;----------------------------------------------------------
@@ -18,7 +19,8 @@ MOBINIT
             MOVE.W   #62,(MOBX)
             MOVE.W   (MOBX),D2
             MOVE.W   D2,(A0)
-            MOVE.W   D2,4(A0)        ;STORING INITIAL XVECTOR 
+            MOVE.W   D2,4(A0)        ;STORING INITIAL XVECTOR
+            CLR      6(A0)           ;SET 0 / GOING FORWARD
             MOVEM.L  (A7)+,D1-D2     ;STORE REGISTER
             RTS
             
@@ -27,7 +29,7 @@ MOBINIT
 MOBUPD
 ;----------------------------------------------------------
             MOVEM.L  D2-D3,-(A7)            ;STACK REGISTER
-            CMPI.W  #1,(VOLVER)             ;ONCE REACHED 
+            CMPI.W  #1,6(A0)             ;ONCE REACHED 
             BEQ  .VUELTA
             MOVE.W  4(A0),D2
             ADD.W   #50,D2                  ;OBTAIN MAX. DISTANCE
@@ -44,9 +46,9 @@ MOBUPD
             BEQ  .DEVUELTA
             SUB.W   #MOBSPEED,(A0)          ;XVECTOR=XVECTOR-2
             BRA     .END
-.DEVUELTA   MOVE.W  #0,(VOLVER)
+.DEVUELTA   MOVE.W  #0,6(A0)
             BRA     .END            
-.AVOLVER    MOVE.W  #1,(VOLVER)            
+.AVOLVER    MOVE.W  #1,6(A0)            
             BRA     .END             
 ;----------------------------------------------------------
 
