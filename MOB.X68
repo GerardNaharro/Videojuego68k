@@ -3,7 +3,8 @@
 * AUTHOR     :  Gerard y Lucas
 * COMMENTS   :  MOB VAR.
 *               (A0)=XVECTOR
-*               2(A0)=YVECTOR 
+*               2(A0)=YVECTOR
+*               4(A0)=INITIAL XVECTOR
 * Description:
 *-----------------------------------------------------------
 ;----------------------------------------------------------
