@@ -27,103 +27,107 @@ CHARUPD
 ;MODIFIES   -   NONE
 ;-----------------------------------------------------------
 
-                BTST.B #KBDBITLF,(KBDVAL)   ; LEFT KEY PRESSED COMPROBATION
-                BNE .MOVEL                  ; YES: MOVE LEFT
-                BTST.B #KBDBITRT,(KBDVAL)   ; RIHT KEY PRESSED COMPROBATION
-                BNE .MOVER                  ; YES: MOVE RIGHT
-                BTST.B #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
-                BNE .SHOT                   ; YES: SHOOT
-                JSR FALLING                 ; CHECK IF IN THE AIR
-                CMP.W #$FF,D5
-                BEQ .FALL                   ; FALL
-                BTST.B #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-                BNE .JUMP                   ; YES: UP PRESSED
+                BTST.B  #KBDBITLF,(KBDVAL)   ; LEFT KEY PRESSED COMPROBATION
+                BNE     .MOVEL               ; YES: MOVE LEFT
+                BTST.B  #KBDBITRT,(KBDVAL)   ; RIHT KEY PRESSED COMPROBATION
+                BNE     .MOVER               ; YES: MOVE RIGHT
+                BTST.B  #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
+                BNE     .SHOT                ; YES: SHOOT
+                JSR     FALLING              ; CHECK IF IN THE AIR
+                CMP.W   #$FF,D5
+                BEQ     .FALL                ; FALL
+                BTST.B  #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+                BNE     .JUMP                ; YES: UP PRESSED
                 RTS
                 
 .MOVEL         ;CHECK LEFT SIDE OF THE CHARACTER
-               JSR GETNXTL
-               CMP.W #$FF,D5                ; CHECK BLOCK CODE                
-               BNE .OBSTACLE                       ; OBSTACLE FOUND
-               SUB.W #CHARSPED,(CHARX)      ; MOVE LEFT
+               JSR      GETNXTL
+               CMP.W    #$FF,D5              ; CHECK BLOCK CODE                
+               BNE      .OBSTACLE            ; OBSTACLE FOUND
+               SUB.W    #CHARSPED,(CHARX)    ; MOVE LEFT
 *               MOVE.L (A7)+,D5
-               BTST.B #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
-               BNE .SHOTL                  ; YES: SHOOT
-               JSR FALLING                 ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL 
-               BTST.B #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-               BNE .JUMP                   ; YES: UP PRESSED
+               BTST.B   #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
+               BNE      .SHOTL               ; YES: SHOOT
+               JSR      FALLING              ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL 
+               BTST.B   #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE      .JUMP                ; YES: UP PRESSED
                RTS
                
                
 .OBSTACLE      ;DONT MOVE
 *               MOVE.L (A7)+,D5
-               JSR FALLING                 ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL
-               BTST.B #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-               BNE .JUMP                   ; YES: UP PRESSED 
+               JSR      FALLING              ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL
+               BTST.B   #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE      .JUMP                ; YES: UP PRESSED 
                RTS
 
 .FALL          
-               ADD.W #CHARSPED-2,(CHARY)     ;FALL
+               ADD.W    #CHARSPED-2,(CHARY)  ;FALL
                RTS
 
 
-.MOVER         JSR GETNXTR
-               CMP.W #$FF,D5                 ; CHECK BLOCK CODE                
-               BNE .OBSTACLE                 ; OBSTACLE FOUND
-               ADD.W #CHARSPED,(CHARX)      ; MOVE LEFT
+.MOVER         JSR      GETNXTR
+               CMP.W    #$FF,D5              ; CHECK BLOCK CODE                
+               BNE      .OBSTACLE            ; OBSTACLE FOUND
+               ADD.W    #CHARSPED,(CHARX)    ; MOVE LEFT
 *               MOVE.L (A7)+,D5
-               BTST.B #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
-               BNE .SHOT                   ; YES: SHOOT
-               JSR FALLING                 ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL
-               BTST.B #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-               BNE .JUMP                   ; YES: UP PRESSED 
+               BTST.B   #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
+               BNE      .SHOT                ; YES: SHOOT
+               JSR      FALLING              ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL
+               BTST.B   #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE      .JUMP                ; YES: UP PRESSED 
                RTS
                
 
-.SHOT          MOVEM.L A1-A3/D0,-(A7)     ;STACK REGISTER
-               BTST.B #1,(SCRCYCCT)            ;2 CYCLES
-               BEQ .END
-               MOVE.W #SHOTID,D0
-               LEA    SHOTINIT,A1
-               LEA    SHOTUPD,A2
-               LEA    SHOTPLOT,A3
-               JSR    AGLADD
-               JSR    SHOTSND                            
-.END           MOVEM.L (A7)+,A1-A3/D0     ;STORE REGISTERS
-               JSR FALLING                ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL
+.SHOT          MOVEM.L   A1-A3/D0,-(A7)     ;STACK REGISTER
+               BTST.B    #1,(SCRCYCCT)      ;2 CYCLES
+               BEQ      .END
+               MOVE.W   #SHOTID,D0
+               LEA      SHOTINIT,A1
+               LEA      SHOTUPD,A2
+               LEA      SHOTPLOT,A3
+               JSR      AGLADD
+               JSR      SHOTSND                            
+.END           MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
+               JSR      FALLING            ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL
+               BTST.B  #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE     .JUMP                ; YES: UP PRESSED
                RTS
                
-.SHOTL         MOVEM.L A1-A3/D0,-(A7)     ;STACK REGISTER
-               BTST.B #1,(SCRCYCCT)            ;16 CYCLES
-               BEQ .ENDL
-               MOVE.W #SHOTID,D0
-               LEA    SHOTINIT,A1
-               LEA    SHOTLUPD,A2
-               LEA    SHOTPLOT,A3
-               JSR    AGLADD
-               JSR    SHOTSND                            
-.ENDL          MOVEM.L (A7)+,A1-A3/D0     ;STORE REGISTERS
-               JSR FALLING                ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL
+.SHOTL         MOVEM.L  A1-A3/D0,-(A7)     ;STACK REGISTER
+               BTST.B   #1,(SCRCYCCT)      ;16 CYCLES
+               BEQ      .ENDL
+               MOVE.W   #SHOTID,D0
+               LEA      SHOTINIT,A1
+               LEA      SHOTLUPD,A2
+               LEA      SHOTPLOT,A3
+               JSR      AGLADD
+               JSR      SHOTSND                            
+.ENDL          MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
+               JSR      FALLING            ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL
+               BTST.B  #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE     .JUMP                ; YES: UP PRESSED
                RTS 
 
-.JUMP          JSR GETNXTU
-               CMP.W #$FF,D5                 ; CHECK BLOCK CODE                
-               BNE .NOJUMP                   ; OBSTACLE FOUND
-               JSR  JUMPSND
-               SUB.W #CHARJUMP,(CHARY)      ; JUMP
+.JUMP          JSR      GETNXTU
+               CMP.W    #$FF,D5                 ; CHECK BLOCK CODE                
+               BNE      .NOJUMP                 ; OBSTACLE FOUND
+               JSR      JUMPSND
+               SUB.W    #CHARJUMP,(CHARY)       ; JUMP
 *               MOVE.L (A7)+,D5
-               JSR FALLING                 ; CHECK IF IN THE AIR
-               CMP.W #$FF,D5
-               BEQ .FALL 
+               JSR      FALLING                 ; CHECK IF IN THE AIR
+               CMP.W    #$FF,D5
+               BEQ      .FALL 
                RTS
 
 .NOJUMP        RTS               
@@ -194,8 +198,8 @@ CHARPLOT
                 MOVE.W  (CHARX),D1       ;LEFT X
                 MOVE.W  (CHARY),D2       ;UPPER Y
 
-                ADD.W  #5,D1
-                ADD.W  #15,D2
+                ADD.W   #5,D1
+                ADD.W   #15,D2
                 MOVE.W  D1,D3
                 MOVE.W  D2,D4
                 ADD.W   #6,D4
@@ -210,6 +214,7 @@ CHARPLOT
 
 
         
+
 
 
 

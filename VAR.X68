@@ -17,11 +17,13 @@ EYERY       DS.W    1       ;CHARACTER'S RIGHT EYE Y
 STACUR      DS.W    1                       ; CURRENT STATE
 STANEXT     DS.W    1                       ; NEXT STATE
 
+
 ;------MOB VAR-------------------------------------------
 VOLVER  DS.W    1     ;Going forward or backward
 MOBXX   DC.W    15,50 ;Provisional      
 MOBN    DS.W    1     ;Provisional
-
+MOBY    DS.W    1     ;PROVISIONAL
+MOBX    DS.W    1     ;PROVISIONAL
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

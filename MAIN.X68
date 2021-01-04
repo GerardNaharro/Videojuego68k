@@ -19,6 +19,7 @@
             INCLUDE "STATES.X68"            ; STATES MANAGEMENT
             INCLUDE "SOUND.X68"             ; SOUNDS MANAGEMENT
             INCLUDE "LIFE.X68"              ; LIFE MANAGEMENT
+            INCLUDE "MOB.X68"               ; MOB MANAGEMENT
             
 ; --- INITIALIZE --------------------------------------------------------------
 
@@ -57,6 +58,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
 
 
 

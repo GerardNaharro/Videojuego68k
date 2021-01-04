@@ -90,10 +90,10 @@ STAINTRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR INTROSND
-            BTST.B #KBDBITF1,(KBDEDGE)
-            BEQ .END
-            MOVE.W #STAMAP1,(STANEXT)
+            JSR     INTROSND
+            BTST.B  #KBDBITF1,(KBDEDGE)
+            BEQ     .END
+            MOVE.W  #STAMAP1,(STANEXT)
             
 .END            RTS
 
@@ -105,51 +105,51 @@ STAINTRP
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-            MOVEM.L D0-D4/A0-A1,-(A7)      ;STACK REGISTERS
-            LEA BITMAP,A0
+            MOVEM.L  D0-D4/A0-A1,-(A7)      ;STACK REGISTERS
+            LEA      BITMAP,A0
 *            MOVE.W #$FF00,D1
 *            MOVE.W #11,D0
 *            TRAP #15
-            MOVE.W #418,D3  
-            MOVE.W #258,D4  
-            CLR.L D1
-            CLR.L D2
-            MOVE.W #219,D1
-            MOVE.W #220,D2
+            MOVE.W  #418,D3  
+            MOVE.W  #258,D4  
+            CLR.L   D1
+            CLR.L   D2
+            MOVE.W  #219,D1
+            MOVE.W  #220,D2
 .LOOP        
            
-            BRA .COLOR
+            BRA     .COLOR
 .HERE
-            MOVE.W #82,D0
-            TRAP #15
-            ADDQ.W #1,D1
-            CMP.W D3,D1
-            BLE .LOOP
-            ADDQ.W #1,D2
-            CLR.L D1
-            MOVE.W #219,D1
-            CMP.W D4,D2
-            BLE .LOOP
-            BRA .PUSH
+            MOVE.W  #82,D0
+            TRAP    #15
+            ADDQ.W  #1,D1
+            CMP.W   D3,D1
+            BLE     .LOOP
+            ADDQ.W  #1,D2
+            CLR.L   D1
+            MOVE.W  #219,D1
+            CMP.W   D4,D2
+            BLE     .LOOP
+            BRA     .PUSH
             
 .COLOR
-            MOVE.L D1,-(A7)
-            MOVE.L (A0)+,D1
-            MOVE.W #80,D0
-            TRAP #15
-            MOVE.L (A7)+,D1
-            BRA .HERE
+            MOVE.L  D1,-(A7)
+            MOVE.L  (A0)+,D1
+            MOVE.W  #80,D0
+            TRAP    #15
+            MOVE.L  (A7)+,D1
+            BRA     .HERE
 
 
-.PUSH       BTST.B #2,(SCRCYCCT)            ;16 CYCLES
-            BEQ .END
+.PUSH       BTST.B  #2,(SCRCYCCT)            ;16 CYCLES
+            BEQ     .END
 
-            MOVE.W #((80-14)/2)<<8|25,D1    ;FIRST TEXT COORDINATES
-            MOVE.B #11,D0
-            TRAP #15                        ;LOCATE TEXT CURSOR
-            LEA .STR0,A1                    ;STRING POINTER
-            MOVE.B #13,D0
-            TRAP #15                        ;PRINT
+            MOVE.W  #((80-14)/2)<<8|25,D1    ;FIRST TEXT COORDINATES
+            MOVE.B  #11,D0
+            TRAP    #15                        ;LOCATE TEXT CURSOR
+            LEA     .STR0,A1                    ;STRING POINTER
+            MOVE.B  #13,D0
+            TRAP    #15                        ;PRINT
             
 .END        MOVEM.L (A7)+,D0-D4/A0-A1
             RTS
@@ -168,7 +168,15 @@ STAMAP1I
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            MOVEM.L   A1-A3/D0,-(A7)     ;STACK REGISTER
             JSR CHARINIT
+         
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPD,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD
+            MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -1105,6 +1113,8 @@ BITMAP
     DC.L    $00020,$00030,$00010,$00010,$00010,$00010,$00010,$00386,$00020
     DC.L    $00020,$00085,$00020,$00030,$00020,$00000,$00000,$00000,$00000
     DC.L    $00000,$00000,$00000,$00000
+
+
 
 
 

@@ -1,6 +1,6 @@
 *-----------------------------------------------------------
 * Title      : MOB MANAGEMENT(AGENT)
-* AUTHOR     :  Gerald y Lucas
+* AUTHOR     :  Gerard y Lucas
 * COMMENTS   :  MOB VAR.
 *               (A0)=XVECTOR
 *               2(A0)=YVECTOR 
@@ -10,9 +10,18 @@
 MOBINIT
 ;INITIALIZE AN ENEMY/MOB
 ;----------------------------------------------------------
-            MOVE.W #MOBX,(A0)         ;Por ahora es constante, porque no  
-            MOVE.W #MOBY,2(A0)        ; sabia como hacer que accediese a
-                                      ; un DC, maÃ±ana sigo. 
+*            MOVE.W #MOBX,(A0)         ;Por ahora es constante, porque no  
+*            MOVE.W #MOBY,2(A0)        ; sabia como hacer que accediese a
+*                                      ; un DC, mañana sigo. 
+
+            MOVEM.L  D1-D2,-(A7)     ;STACK REGISTER
+            MOVE.W   #113,(MOBY)
+            MOVE.W   (MOBY),D1
+            MOVE.W   D1,2(A0)
+            MOVE.W   #62,(MOBX)
+            MOVE.W   (MOBX),D2
+            MOVE.W   D2,(A0)
+            MOVEM.L  (A7)+,D1-D2     ;STORE REGISTER
             RTS
             
 ;----------------------------------------------------------
@@ -21,12 +30,12 @@ MOBUPD
 ;----------------------------------------------------------
             CMPI.W  #1,(VOLVER)             ;ONCE REACHED 
             BEQ  .VUELTA
-            CMP.W  #65,(A0)
+            CMP.W  #124,(A0)
             BEQ  .AVOLVER
             ADDQ.W #MOBSPEED,(A0)           ;XVECTOR=XVECTOR+2
 .END            
             RTS
-.VUELTA     CMPI.W  #15,(A0)
+.VUELTA     CMPI.W  #52,(A0)
             BEQ  .DEVUELTA
             SUB.W   #MOBSPEED,(A0)          ;XVECTOR=XVECTOR-2
             BRA     .END
@@ -57,8 +66,7 @@ MOBPLOT
             TRAP    #15               ;Draw square
             MOVEM.L (A7)+,D0-D4
             RTS
-
-*~Font name~Courier New~
-*~Font size~10~
+*~Font name~Fixedsys~
+*~Font size~9~
 *~Tab type~1~
 *~Tab size~4~
