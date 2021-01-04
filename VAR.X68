@@ -19,7 +19,7 @@ STANEXT     DS.W    1                       ; NEXT STATE
 
 
 ;------MOB VAR-------------------------------------------
-VOLVER  DS.W    1     ;Going forward or backward
+VOLVER  DS.W    1     ;NOTHING
 MOBXX   DC.W    15,50 ;Provisional      
 MOBN    DS.W    1     ;Provisional
 MOBY    DS.W    1     ;PROVISIONAL
