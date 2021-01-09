@@ -29,6 +29,12 @@ SHOTLONG    EQU     10           ;SHOT LONGITUDE
 STAINTRO    EQU     0            ;GAME INTRO SCREEN STATE
 STAMAP1     EQU     1            ;GAME FIRST MAP
 STAGOVER    EQU     2            ;GAME OVER STATE
+STAMAP2     EQU     3            ;GAME SECOND MAP
+STAMAP3     EQU     4            ;GAME THIRD MAP
+STAMAP4     EQU     5            ;GAME FOURTH MAP
+STAWIN      EQU     6            ;GAME WON STATE
+STAMAP5     EQU     7            ;GAME FIFTH MAP
+STAMAP6     EQU     8            ;GAME SIXTH MAP
 
 ;------------------------------------------------------------------------------
 
@@ -39,9 +45,11 @@ MOBLINE  EQU    30                ;MOD DIMENSIONS
 MOBSPEED EQU    2                 ;MOB SPEED
 MOBPCOL  EQU    $00FF0000         ;MOB PEN COLOR
 MOBFCOL  EQU    $000000FF         ;MOB FILL COLOR
-*MOBY     EQU    113               ;PROVISIONAL
-*MOBX     EQU    62                ;PROVISIONAL
 ;-------------------------------------------------------------------------------
+
+
+
+
 
 
 

@@ -29,7 +29,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             ; TO DO : ADD YOUR GAME INITIALIZATION HERE
             JSR STAINIT
             JSR SNDINIT
-            JSR LIFEINIT
+*            JSR LIFEINIT
 
 ; --- UPDATE ------------------------------------------------------------------
 
@@ -58,6 +58,13 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
+
+
+
+
+
 
 
 

@@ -19,11 +19,14 @@ STANEXT     DS.W    1                       ; NEXT STATE
 
 
 ;------MOB VAR-------------------------------------------
-VOLVER  DS.W    1     ;NOTHING
-MOBXX   DC.W    15,50 ;Provisional      
-MOBN    DS.W    1     ;Provisional
-MOBY    DS.W    1     ;PROVISIONAL
-MOBX    DS.W    1     ;PROVISIONAL
+VOLVER  DS.W    1     ;GOING FORWARD OR BACKWARD      
+MOBNUM  DS.W    1     ;MOB NUMBER
+MOBY    DS.W    1     ;MOB Y COORDINATE
+MOBX    DS.W    1     ;MOB X COORDINATE
+
+; --- MAP MANAGEMENT VARIABLES ----------------------------------------------
+
+MAPCUR  DS.W    1     ;CURRENT MAP
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

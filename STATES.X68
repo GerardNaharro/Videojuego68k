@@ -41,8 +41,8 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAMAP1I,STAGOVRI
-.UPDTBL     DC.L    STAINTRU,STAMAP1U,STAGOVRU
+.INITBL     DC.L    STAINTRI,STAMAP1I,STAGOVRI,STAMAP2I,STAMAP3I,STAMAP4I,STAWONI,STAMAP5I,STAMAP6I
+.UPDTBL     DC.L    STAINTRU,STAMAP1U,STAGOVRU,STAMAP2U,STAMAP3U,STAMAP4U,STAWONU,STAMAP5U,STAMAP6U
 
 ; -----------------------------------------------------------------------------
 STAPLOT
@@ -60,7 +60,7 @@ STAPLOT
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.PLTTBL     DC.L    STAINTRP,STAMAP1P,STAGOVRP
+.PLTTBL     DC.L    STAINTRP,STAMAP1P,STAGOVRP,STAMAP2P,STAMAP3P,STAMAP4P,STAWONP,STAMAP5P,STAMAP6P
 
 ; -----------------------------------------------------------------------------
 STAEMPTY
@@ -168,15 +168,48 @@ STAMAP1I
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L   A1-A3/D0,-(A7)     ;STACK REGISTER
-            JSR CHARINIT
-         
-            MOVE.W   #MOBID,D0
-            LEA      MOBINIT,A1
-            LEA      MOBUPD,A2
-            LEA      MOBPLOT,A3
-            JSR      AGLADD
-            MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
+            MOVEM.L   A0-A3/D0,-(A7)   ;STACK REGISTER
+            JSR       LIFEINIT        ;INITIALIZE LIFES
+            
+            MOVE.W    #MOBID,D0       ;IF ANY ENEMYES FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .SHOT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.SHOT       MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP2      CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP2
+            
+.NEXT       MOVE.W    #2,(MOBNUM)      ;THE NUM OF ENEMIES
+            MOVE.W    #1,(MAPCUR)      ;THE CURRENT MAP
+            JSR       CHARINIT         ;INIT CHAR  
+ 
+            MOVE.W    #98,(MOBY)       ;LOCATE ENEMY, CREATE AGENT
+            MOVE.W    #62,(MOBX)
+            MOVE.W    #MOBID,D0
+            LEA       MOBINIT,A1
+            LEA       MOBUPDM,A2
+            LEA       MOBPLOT,A3
+            JSR       AGLADD           ;FIRST ENEMY
+            
+            
+            MOVE.W    #418,(MOBY)
+            MOVE.W    #305,(MOBX)
+            MOVE.W    #MOBID,D0
+            LEA       MOBINIT,A1
+            LEA       MOBUPDL,A2
+            LEA       MOBPLOT,A3
+            JSR       AGLADD             ;SECOND ENEMY
+            
+            
+            MOVEM.L   (A7)+,A0-A3/D0     ;STORE REGISTERS
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -186,8 +219,17 @@ STAMAP1U
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR CHARUPD
-            JSR AGLUPD
+            MOVE.L  D0,-(A7)
+            JSR     CHARUPD
+            JSR     AGLUPD
+            MOVE.W  (MOBNUM),D0   ;IF NO ENEMIES LEFT
+            CMP.W   #0,D0
+            BEQ     .NEXTMAP1      ;GO TO NEXT MAP
+            MOVE.L (A7)+,D0
+            RTS
+            
+.NEXTMAP1   MOVE.W  #STAMAP2,(STANEXT)
+            MOVE.L (A7)+,D0
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -202,7 +244,404 @@ STAMAP1P
     JSR CHARPLOT
     JSR AGLPLOT
     JSR LIFEPLOT
-        RTS        
+        RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP2I
+; MAP TWO INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W   #3,(MOBNUM)
+            MOVE.W   #2,(MAPCUR)
+            MOVEM.L   A0-A3/D0,-(A7)     ;STACK REGISTER
+            
+            MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.NEXT       JSR CHARINIT
+            
+            MOVE.W   #34,(MOBY)
+            MOVE.W   #300,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDL,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FIRST ENEMY
+            
+            
+            MOVE.W   #418,(MOBY)
+            MOVE.W   #360,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDM,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;SECOND ENEMY
+            
+            MOVE.W   #130,(MOBY)
+            MOVE.W   #355,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;THIRD ENEMY
+            
+            MOVEM.L  (A7)+,A0-A3/D0     ;STORE REGISTERS
+            
+            RTS
+
+; -----------------------------------------------------------------------------
+STAMAP2U
+; MAP TWO UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     CHARUPD
+            JSR     AGLUPD
+            CMP.W   #0,(MOBNUM)   ;IF NO ENEMIES LEFT 
+            BEQ     .NEXTMAP2     ;GO TO NEXT MAP
+            RTS
+.NEXTMAP2   MOVE.W  #STAMAP3,(STANEXT)
+            RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP2P
+; MAP TWO PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+    
+            JSR MAP2MATD
+            JSR CHARPLOT
+            JSR AGLPLOT
+            JSR LIFEPLOT
+                RTS
+
+
+
+; -----------------------------------------------------------------------------
+STAMAP3I
+; MAP THREE INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W   #3,(MOBNUM)
+            MOVE.W   #3,(MAPCUR)
+            MOVEM.L   A0-A3/D0,-(A7)     ;STACK REGISTER
+            
+            MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.NEXT       JSR CHARINIT
+            
+            MOVE.W   #226,(MOBY)
+            MOVE.W   #63,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FIRST ENEMY
+            
+            
+            MOVE.W   #386,(MOBY)
+            MOVE.W   #192,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDL,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;SECOND ENEMY
+            
+            MOVE.W   #130,(MOBY)
+            MOVE.W   #250,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDM,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;THIRD ENEMY
+            
+            MOVEM.L  (A7)+,A0-A3/D0     ;STORE REGISTERS
+            
+            RTS
+
+; -----------------------------------------------------------------------------
+STAMAP3U
+; MAP THREE UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     CHARUPD
+            JSR     AGLUPD
+            CMP.W   #0,(MOBNUM)   ;IF NO ENEMIES LEFT 
+            BEQ     .NEXTMAP3     ;GO TO NEXT MAP
+            RTS
+.NEXTMAP3   MOVE.W  #STAMAP4,(STANEXT)
+            RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP3P
+; MAP THREE PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+    
+    JSR MAP3MATD
+    JSR CHARPLOT
+    JSR AGLPLOT
+    JSR LIFEPLOT
+        RTS
+
+
+
+
+
+; -----------------------------------------------------------------------------
+STAMAP4I
+; MAP FOUR INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W   #3,(MOBNUM)
+            MOVE.W   #4,(MAPCUR)
+            MOVEM.L   A0-A3/D0,-(A7)     ;STACK REGISTER
+            
+            MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.NEXT       JSR CHARINIT
+            
+            MOVE.W   #354,(MOBY)
+            MOVE.W   #475,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FIRST ENEMY
+            
+            
+            MOVE.W   #418,(MOBY)
+            MOVE.W   #97,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;SECOND ENEMY
+            
+            MOVE.W   #34,(MOBY)
+            MOVE.W   #32,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDL,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;THIRD ENEMY
+            
+            MOVEM.L  (A7)+,A0-A3/D0     ;STORE REGISTERS
+            
+            RTS
+
+; -----------------------------------------------------------------------------
+STAMAP4U
+; MAP FOUR UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     CHARUPD
+            JSR     AGLUPD
+            CMP.W   #0,(MOBNUM)   ;IF NO ENEMIES LEFT 
+            BEQ     .NEXTMAP4     ;GO TO NEXT MAP
+            RTS
+.NEXTMAP4   MOVE.W  #STAMAP5,(STANEXT)
+            RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP4P
+; MAP FOUR PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+    
+    JSR MAP4MATD
+    JSR CHARPLOT
+    JSR AGLPLOT
+    JSR LIFEPLOT
+        RTS
+
+
+
+; -----------------------------------------------------------------------------
+STAMAP5I
+; MAP FIVE INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W   #4,(MOBNUM)
+            MOVE.W   #5,(MAPCUR)
+            MOVEM.L   A0-A3/D0,-(A7)     ;STACK REGISTER
+            
+            MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.NEXT       JSR CHARINIT
+            
+            MOVE.W   #418,(MOBY)
+            MOVE.W   #97,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FIRST ENEMY
+            
+            
+            MOVE.W   #130,(MOBY)
+            MOVE.W   #32,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;SECOND ENEMY
+            
+            MOVE.W   #162,(MOBY)
+            MOVE.W   #384,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;THIRD ENEMY
+            
+            MOVE.W   #66,(MOBY)
+            MOVE.W   #416,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDS,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FOURTH ENEMY
+            
+            MOVEM.L  (A7)+,A0-A3/D0     ;STORE REGISTERS
+            
+            RTS
+
+; -----------------------------------------------------------------------------
+STAMAP5U
+; MAP FIVE UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     CHARUPD
+            JSR     AGLUPD
+            CMP.W   #0,(MOBNUM)   ;IF NO ENEMIES LEFT 
+            BEQ     .NEXTMAP5     ;GO TO NEXT MAP
+            RTS
+.NEXTMAP5   MOVE.W  #STAMAP6,(STANEXT)
+            RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP5P
+; MAP FIVE PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+    
+    JSR MAP5MATD
+    JSR CHARPLOT
+    JSR AGLPLOT
+    JSR LIFEPLOT
+        RTS
+
+
+
+; -----------------------------------------------------------------------------
+STAMAP6I
+; MAP SIX INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W   #1,(MOBNUM)
+            MOVE.W   #6,(MAPCUR)
+            MOVEM.L   A0-A3/D0,-(A7)     ;STACK REGISTER
+            
+            MOVE.W    #SHOTID,D0       ;IF ANY SHOTS FROM OTHER MAPS EXIST, KILL THEM
+            JSR       DMMFRSTO
+.LOOP       CMP.L     #0,A0           ;IF A0!=0 == FOUND
+            BEQ       .NEXT           ;NOT FOUND
+            JSR       AGLKILL           
+            JSR       DMMNEXTO
+            BRA       .LOOP
+            
+.NEXT       JSR CHARINIT
+            
+            MOVE.W   #418,(MOBY)
+            MOVE.W   #330,(MOBX)
+            MOVE.W   #MOBID,D0
+            LEA      MOBINIT,A1
+            LEA      MOBUPDM,A2
+            LEA      MOBPLOT,A3
+            JSR      AGLADD             ;FIRST ENEMY
+            
+            
+            MOVEM.L  (A7)+,A0-A3/D0     ;STORE REGISTERS
+            
+            RTS
+
+; -----------------------------------------------------------------------------
+STAMAP6U
+; MAP SIX UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     CHARUPD
+            JSR     AGLUPD
+            CMP.W   #0,(MOBNUM)   ;IF NO ENEMIES LEFT 
+            BEQ     .NEXTMAP6     ;GO TO NEXT MAP
+            RTS
+.NEXTMAP6   MOVE.W  #STAWIN,(STANEXT)
+            RTS  
+
+; -----------------------------------------------------------------------------
+STAMAP6P
+; MAP SIX PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+    
+    JSR MAP6MATD
+    JSR CHARPLOT
+    JSR AGLPLOT
+    JSR LIFEPLOT
+        RTS      
             
 ; -----------------------------------------------------------------------------
 STAGOVRI
@@ -220,6 +659,12 @@ STAGOVRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            JSR     GOVERSND
+            BTST.B  #KBDBITF1,(KBDEDGE)
+            BEQ     .END
+            MOVE.W  #STAINTRO,(STANEXT)
+            RTS
+.END              
             RTS
 
 ; -----------------------------------------------------------------------------
@@ -229,6 +674,13 @@ STAGOVRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+            MOVEM.L  D0/A1,-(A7)            ;STACK REGISTERS
+            MOVE.B      #80,D0
+            MOVE.L      #0,D1                   ;PEN COLOR BLACK
+            TRAP        #15
+            ADDQ.B      #1,D0
+            MOVE.L      #0,D1                   ;FILL COLOR BLACK
+            TRAP        #15
             MOVE.W #((80-10)/2)<<8|10,D1    ;FIRST TEXT COORDINATES
             MOVE.B #11,D0
             TRAP #15                        ;LOCATE TEXT CURSOR
@@ -236,7 +688,7 @@ STAGOVRP
             MOVE.B #13,D0
             TRAP #15                        ;PRINT
             
-            MOVE.W #((80-24)/2)<<8|12,D1    ;FIRST TEXT COORDINATES
+            MOVE.W #((80-26)/2)<<8|12,D1    ;FIRST TEXT COORDINATES
             MOVE.B #11,D0
             TRAP #15                        ;LOCATE TEXT CURSOR
             LEA .STR1,A1                    ;STRING POINTER
@@ -253,15 +705,87 @@ STAGOVRP
             MOVE.B #13,D0
             TRAP #15 
             
-.END
+.END        MOVEM.L  (A7)+,D0/A1            ;STORE REGISTERS
             RTS
 .STR0   DC.B    'GAME  OVER',0
-.STR1   DC.B    'YOU DIDNT SAVE THE WORLD',0
+.STR1   DC.B    'YOU DIDN',39,'T  SAVE THE WORLD',0
 .STR2   DC.B    'PUSH SPACE KEY',0
         DS.W    0            
             
             
 
+
+
+
+; -----------------------------------------------------------------------------
+STAWONI
+; GAME WON INITIALIZATION
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            RTS
+
+; -----------------------------------------------------------------------------
+STAWONU
+; GAME WON UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            JSR     NXTLVSND
+            BTST.B  #KBDBITF1,(KBDEDGE)
+            BEQ     .END
+            MOVE.W  #STAINTRO,(STANEXT)
+            RTS
+.END              
+            RTS
+
+; -----------------------------------------------------------------------------
+STAWONP
+; GAME WON PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.L     D0-D1/A1,-(A7)          ;STACK REGISTERS
+            MOVE.B      #80,D0
+            MOVE.L      #0,D1                   ;PEN COLOR BLACK
+            TRAP        #15
+            ADDQ.B      #1,D0
+            MOVE.L      #0,D1                   ;FILL COLOR BLACK
+            TRAP        #15
+            CLR.L       D1
+            MOVE.W      #((80-14)/2)<<8|10,D1   ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                     ;LOCATE TEXT CURSOR
+            LEA         .STR0,A1                ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15                     ;PRINT
+            
+            MOVE.W      #((80-20)/2)<<8|12,D1   ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                     ;LOCATE TEXT CURSOR
+            LEA         .STR1,A1                ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15                     ;PRINT
+            
+            BTST.B      #3,(SCRCYCCT)           ;16 CYCLES
+            BEQ         .END
+            
+            MOVE.W      #((80-14)/2)<<8|25,D1   ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                     ;LOCATE TEXT CURSOR
+            LEA         .STR2,A1                ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15 
+            
+.END        MOVEM.L     (A7)+,D0-D1/A1          ;STORE REGISTERS
+            RTS
+.STR0   DC.B    'GAME  FINISHED',0
+.STR1   DC.B    'YOU SAVED  THE WORLD',0
+.STR2   DC.B    'PUSH SPACE KEY',0
+        DS.W    0
 
 
 
@@ -1113,6 +1637,20 @@ BITMAP
     DC.L    $00020,$00030,$00010,$00010,$00010,$00010,$00010,$00386,$00020
     DC.L    $00020,$00085,$00020,$00030,$00020,$00000,$00000,$00000,$00000
     DC.L    $00000,$00000,$00000,$00000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
