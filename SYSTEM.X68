@@ -18,8 +18,10 @@ SYSINIT
 ; -----------------------------------------------------------------------------
             MOVE.L  (A7)+,A0                ; GET RETURN ADDRESS
             JSR     KBDINIT                 ; INIT KEYBOARD
+            JSR     MSINIT                  ; INIT MOUSE
             JSR     SCRINIT                 ; INIT SCREEN
             JSR     DMMINIT                 ; INIT DYNAMIC MEMORY
+            JSR     SNDINIT                 ; INIT SOUNDS
             ANDI.W  #$DFFF,SR               ; SWITCH TO USER
             MOVE.L  A0,-(A7)                ; PUT RETURN ADDRESS
             RTS
@@ -35,8 +37,8 @@ SCRINIT
 ; OUTPUT   - NONE
 ; MODIFIES - D0,D1,D2,D3
 ; -----------------------------------------------------------------------------
-            ORI.W   #$0700,SR               ; DISABLE ALL INT
-            MOVE.L  #SCRUPD,($80+SCRTRAP*4) ; INSTALL TRAP
+            ORI.W   #$0700,SR                 ; DISABLE ALL INT
+            MOVE.L  #SCRUPD,($80+SCRTRAP*4)   ; INSTALL TRAP
             MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
             MOVE.B  #33,D0
             TRAP    #15
@@ -92,7 +94,36 @@ SCRUPD
             TRAP    #15
             MOVEM.W (A7)+,D0-D1
             RTE
-
+; =============================================================================
+; MOUSE MANAGEMENT (SYSTEM CODE)
+; =============================================================================
+;------------------------------------------------------------------------------
+MSINIT
+;------------------------------------------------------------------------------
+        MOVEM.L  D0-D1,-(A7)
+        MOVE.B  #60,D0                 ; INIT MOUSE    
+        MOVE.W  #2<<8|SYSMOUBU,D1
+        TRAP    #15
+        MOVE.L  #MSREAD,($60+2*4)
+        MOVEM.L  (A7)+,D0-D1
+        RTS
+        
+;------------------------------------------------------------------------------
+MSREAD
+;------------------------------------------------------------------------------
+; TRAP SERVICE ROUTINE.
+; INPUT    - NONE
+; OUTPUT   - (MSX) AND (MSY)
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+           MOVEM.L  D0-D1,-(A7)
+           MOVE.B  #61,D0
+           CLR.B   D1
+           TRAP    #15
+           MOVE.L  D1,(MSPOS)
+;.END
+           MOVEM.L  (A7)+,D0-D1
+           RTE
 ; =============================================================================
 ; KEYBOARD MANAGEMENT (SYSTEM CODE)
 ; =============================================================================
@@ -265,6 +296,10 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
+
+
+
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

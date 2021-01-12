@@ -147,7 +147,7 @@ CHARPLOT
                 MOVE.L  #CHARPCOL,D1     ;PEN COLOR
                 TRAP    #15
                 MOVE.B  #81,D0           ;SET FILL COLOR TASK
-                MOVE.L  #CHARFCOL,D1     ;FILL COLOR
+                MOVE.L  (CHARFCOL),D1     ;FILL COLOR
                 TRAP    #15
                 
                 MOVE.W  (CHARX),D1       ;LEFT X
@@ -214,6 +214,8 @@ CHARPLOT
 
 
         
+
+
 
 
 

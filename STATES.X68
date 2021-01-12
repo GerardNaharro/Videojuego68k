@@ -41,8 +41,8 @@ STAUPD
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAMAP1I,STAGOVRI,STAMAP2I,STAMAP3I,STAMAP4I,STAWONI,STAMAP5I,STAMAP6I
-.UPDTBL     DC.L    STAINTRU,STAMAP1U,STAGOVRU,STAMAP2U,STAMAP3U,STAMAP4U,STAWONU,STAMAP5U,STAMAP6U
+.INITBL     DC.L    STAINTRI,STAMAP1I,STAGOVRI,STAMAP2I,STAMAP3I,STAMAP4I,STAWONI,STAMAP5I,STAMAP6I,STACCSI
+.UPDTBL     DC.L    STAINTRU,STAMAP1U,STAGOVRU,STAMAP2U,STAMAP3U,STAMAP4U,STAWONU,STAMAP5U,STAMAP6U,STACCSU
 
 ; -----------------------------------------------------------------------------
 STAPLOT
@@ -60,7 +60,7 @@ STAPLOT
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.PLTTBL     DC.L    STAINTRP,STAMAP1P,STAGOVRP,STAMAP2P,STAMAP3P,STAMAP4P,STAWONP,STAMAP5P,STAMAP6P
+.PLTTBL     DC.L    STAINTRP,STAMAP1P,STAGOVRP,STAMAP2P,STAMAP3P,STAMAP4P,STAWONP,STAMAP5P,STAMAP6P,STACCSP
 
 ; -----------------------------------------------------------------------------
 STAEMPTY
@@ -90,10 +90,10 @@ STAINTRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR     INTROSND
+            JSR INTROSND
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
-            MOVE.W  #STAMAP1,(STANEXT)
+            MOVE.W  #STACCS,(STANEXT)
             
 .END            RTS
 
@@ -158,9 +158,108 @@ STAINTRP
 .STR0   DC.B    'PUSH SPACE KEY',0
         DS.W    0            
 
-
-
-
+;------------------------------------------------------------------------------
+STACCSI
+;------------------------------------------------------------------------------
+           
+        RTS
+;------------------------------------------------------------------------------
+STACCSU
+;GAME COLOR SELECTOR UPDATE
+;------------------------------------------------------------------------------
+        MOVEM.L D0-D2,-(A7)
+        MOVE.W  (MSY),D2
+        MOVE.W  (MSX),D0
+        CMPI.W #200,D2                    ;IF MSY<200, GO TO .END
+        BLT .END
+        CMPI.W #300,D2                    ;IF MSY>300, GO TO .END
+        BGT .END
+        CMPI.W #200,D0                    ;IF MSX<200, GO TO .END
+        BLT .END
+        CMPI.W #300,D0                    ;IF MSX>300, GO TO .NEXT
+        BGT .NEXT
+        MOVE.L #PINK,(CHARFCOL)           ;MOVE PINK TO CHARFCOL
+        BRA .END1                         
+.NEXT
+        CMPI.W #350,D0                    ;IF MSX<350, GO TO .END
+        BLT .END
+        CMPI.W #450,D0                    ;IF MSX>450, GO TO .END
+        BGT .END
+        MOVE.L #BLUE,(CHARFCOL)           ;MOVE BLUE TO CHARFCOL
+                                          
+.END1
+        CLR.L   D0
+        CLR.L   D1
+*        MOVE.W  #60,D0
+*        TRAP    #15
+        MOVE.W  #STAMAP1,(STANEXT)
+            
+.END            
+        MOVEM.L (A7)+,D0-D2
+        RTS
+;------------------------------------------------------------------------------
+STACCSP
+;GAME COLOR SELECTOR PLOT
+;------------------------------------------------------------------------------
+        MOVEM.L D0-D4/A1,-(A7)
+        MOVE.W  #((80-16)/2)<<8|8,D1  ;TEXT .TITLE
+        MOVE.B  #11,D0
+        TRAP    #15
+        LEA     .TITLE,A1
+        MOVE.B  #13,D0
+        TRAP    #15
+        MOVE.W  #((80-40)/2)<<8|10,D1 ;TEXT .TITLE2
+        MOVE.B  #11,D0
+        TRAP    #15
+        LEA     .TITLE2,A1
+        MOVE.B  #13,D0
+        TRAP    #15
+        MOVE.B      #80,D0            ;LEFT SQUARE
+        MOVE.L      #MOBPCOL,D1
+        TRAP        #15
+        ADDQ.B      #1,D0
+        MOVE.L      #PINK,D1
+        TRAP        #15
+        MOVE.W      #200,D1
+        MOVE.W      #200,D2
+        MOVE.W      D1,D3
+        MOVE.W      D2,D4
+        ADD.W       #100,D3
+        ADD.W       #100,D4
+        MOVE.B      #87,D0
+        TRAP        #15               ;DRAW SQUARE
+        MOVE.B      #80,D0
+        MOVE.L      #00000000,D1      ;PEN COLOR BLACK
+        TRAP        #15
+        ADDQ.B      #1,D0
+        MOVE.L      #00000000,D1      ;FILL COLOR BLACK
+        TRAP        #15
+        MOVE.B      #80,D0            ;RIGHT SQUARE
+        MOVE.L      #MOBPCOL,D1
+        TRAP        #15
+        ADDQ.B      #1,D0
+        MOVE.L      #BLUE,D1
+        TRAP        #15
+        MOVE.W      #350,D1
+        MOVE.W      #200,D2
+        MOVE.W      D1,D3
+        MOVE.W      D2,D4
+        ADD.W       #100,D3
+        ADD.W       #100,D4
+        MOVE.B      #87,D0
+        TRAP        #15               ;DRAW SQUARE
+        MOVE.B      #80,D0
+        MOVE.L      #00000000,D1      ;PEN COLOR BLACK
+        TRAP        #15
+        ADDQ.B      #1,D0
+        MOVE.L      #00000000,D1      ;FILL COLOR BLACK
+        TRAP        #15
+        MOVEM.L (A7)+,D0-D4/A1
+        RTS
+.TITLE  DC.B    'CHOOSE  YOUR COLOR',0
+.TITLE2 DC.B    'USE THE MOUSE AND THEN PRESS LEFT CLICK ',0
+        DS.W    0
+;------------------------------------------------------------------------------
 ; -----------------------------------------------------------------------------
 STAMAP1I
 ; MAP ONE INITIALIZATION
@@ -1637,6 +1736,11 @@ BITMAP
     DC.L    $00020,$00030,$00010,$00010,$00010,$00010,$00010,$00386,$00020
     DC.L    $00020,$00085,$00020,$00030,$00020,$00000,$00000,$00000,$00000
     DC.L    $00000,$00000,$00000,$00000
+
+
+
+
+
 
 
 

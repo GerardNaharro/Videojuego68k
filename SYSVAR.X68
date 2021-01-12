@@ -22,12 +22,16 @@ KBDEDGE     DS.B    1                       ; KEY CHANGED=1
 SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
 SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
             DS.W    0
-
+;
+;MSPOS
+;MSY         DS.W
+;MSX         DS.W
 ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
 
             ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
 DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
             DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+
 *~Font name~Fixedsys~
 *~Font size~9~
 *~Tab type~1~

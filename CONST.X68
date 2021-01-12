@@ -8,7 +8,8 @@
 
 CHARBODY    EQU     31           ;CHARACTER DIMENSIONS
 CHARPCOL    EQU     $00000000    ;CHARACTER PEN COLOR
-CHARFCOL    EQU     $00FF00FF    ;CHARACTER FILL COLOR
+;CHARFCOLP   EQU     $00FF00FF    ;CHARACTER FILL COLOR
+;CHARFCOLB   EQU     $00FFFF00    ;CHARACTER FILL COLOR
 EYESIZE     EQU     1            ;CHARACTER'S EYE SIZE
 CHARSPED    EQU     4            ;CHARACTER'S MOVE SPEED
 FLOOR       EQU     439          ;FLOOR POSITION RELATED TO CHARACTER
@@ -35,7 +36,7 @@ STAMAP4     EQU     5            ;GAME FOURTH MAP
 STAWIN      EQU     6            ;GAME WON STATE
 STAMAP5     EQU     7            ;GAME FIFTH MAP
 STAMAP6     EQU     8            ;GAME SIXTH MAP
-
+STACCS      EQU     9            ;GAME COLOR SELECTOR
 ;------------------------------------------------------------------------------
 
 ; --- MOB RELATED CONSTANTS ---------------------------------------------------
@@ -46,6 +47,9 @@ MOBSPEED EQU    2                 ;MOB SPEED
 MOBPCOL  EQU    $00FF0000         ;MOB PEN COLOR
 MOBFCOL  EQU    $000000FF         ;MOB FILL COLOR
 ;-------------------------------------------------------------------------------
+
+PINK    EQU     $00FF00FF
+BLUE    EQU     $00FFFF00
 
 
 
