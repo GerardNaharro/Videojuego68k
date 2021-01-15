@@ -1,6 +1,6 @@
 *-----------------------------------------------------------
 * Title      : CHARACTER MANAGEMENT
-* Written by : GERARD NAHARRO
+* Written by : GERARD NAHARRO AND LUCAS ORTIZ
 * Date       :
 * Description: 08-12-2020 - CREATION
 *-----------------------------------------------------------
@@ -45,7 +45,6 @@ CHARUPD
                CMP.W    #$FF,D5              ; CHECK BLOCK CODE                
                BNE      .OBSTACLE            ; OBSTACLE FOUND
                SUB.W    #CHARSPED,(CHARX)    ; MOVE LEFT
-*               MOVE.L (A7)+,D5
                BTST.B   #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
                BNE      .SHOTL               ; YES: SHOOT
                JSR      FALLING              ; CHECK IF IN THE AIR
@@ -57,7 +56,6 @@ CHARUPD
                
                
 .OBSTACLE      ;DONT MOVE
-*               MOVE.L (A7)+,D5
                JSR      FALLING              ; CHECK IF IN THE AIR
                CMP.W    #$FF,D5
                BEQ      .FALL
@@ -74,7 +72,6 @@ CHARUPD
                CMP.W    #$FF,D5              ; CHECK BLOCK CODE                
                BNE      .OBSTACLE            ; OBSTACLE FOUND
                ADD.W    #CHARSPED,(CHARX)    ; MOVE LEFT
-*               MOVE.L (A7)+,D5
                BTST.B   #KBDBITF1,(KBDVAL)   ; FIRE1 KEY PRESSED
                BNE      .SHOT                ; YES: SHOOT
                JSR      FALLING              ; CHECK IF IN THE AIR
@@ -85,8 +82,8 @@ CHARUPD
                RTS
                
 
-.SHOT          MOVEM.L   A1-A3/D0,-(A7)     ;STACK REGISTER
-               BTST.B    #1,(SCRCYCCT)      ;2 CYCLES
+.SHOT          MOVEM.L   A1-A3/D0,-(A7)      ;STACK REGISTER
+               BTST.B    #1,(SCRCYCCT)       ;2 CYCLES
                BEQ      .END
                MOVE.W   #SHOTID,D0
                LEA      SHOTINIT,A1
@@ -94,16 +91,16 @@ CHARUPD
                LEA      SHOTPLOT,A3
                JSR      AGLADD
                JSR      SHOTSND                            
-.END           MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
-               JSR      FALLING            ; CHECK IF IN THE AIR
+.END           MOVEM.L  (A7)+,A1-A3/D0       ;STORE REGISTERS
+               JSR      FALLING              ; CHECK IF IN THE AIR
                CMP.W    #$FF,D5
                BEQ      .FALL
-               BTST.B  #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-               BNE     .JUMP                ; YES: UP PRESSED
+               BTST.B   #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE      .JUMP                ; YES: UP PRESSED
                RTS
                
-.SHOTL         MOVEM.L  A1-A3/D0,-(A7)     ;STACK REGISTER
-               BTST.B   #1,(SCRCYCCT)      ;16 CYCLES
+.SHOTL         MOVEM.L  A1-A3/D0,-(A7)       ;STACK REGISTER
+               BTST.B   #1,(SCRCYCCT)        ;2 CYCLES
                BEQ      .ENDL
                MOVE.W   #SHOTID,D0
                LEA      SHOTINIT,A1
@@ -111,21 +108,20 @@ CHARUPD
                LEA      SHOTPLOT,A3
                JSR      AGLADD
                JSR      SHOTSND                            
-.ENDL          MOVEM.L  (A7)+,A1-A3/D0     ;STORE REGISTERS
-               JSR      FALLING            ; CHECK IF IN THE AIR
+.ENDL          MOVEM.L  (A7)+,A1-A3/D0       ;STORE REGISTERS
+               JSR      FALLING              ; CHECK IF IN THE AIR
                CMP.W    #$FF,D5
                BEQ      .FALL
-               BTST.B  #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
-               BNE     .JUMP                ; YES: UP PRESSED
+               BTST.B   #KBDBITUP,(KBDVAL)   ; UP KEY PRESSED COMPROBATION
+               BNE      .JUMP                ; YES: UP PRESSED
                RTS 
 
 .JUMP          JSR      GETNXTU
-               CMP.W    #$FF,D5                 ; CHECK BLOCK CODE                
-               BNE      .NOJUMP                 ; OBSTACLE FOUND
+               CMP.W    #$FF,D5               ; CHECK BLOCK CODE                
+               BNE      .NOJUMP               ; OBSTACLE FOUND
                JSR      JUMPSND
-               SUB.W    #CHARJUMP,(CHARY)       ; JUMP
-*               MOVE.L (A7)+,D5
-               JSR      FALLING                 ; CHECK IF IN THE AIR
+               SUB.W    #CHARJUMP,(CHARY)     ; JUMP
+               JSR      FALLING               ; CHECK IF IN THE AIR
                CMP.W    #$FF,D5
                BEQ      .FALL 
                RTS
@@ -214,6 +210,8 @@ CHARPLOT
 
 
         
+
+
 
 
 

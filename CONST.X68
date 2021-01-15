@@ -1,6 +1,6 @@
 ; =============================================================================
 ; TITLE    : GAME CONSTANTS
-; AUTHOR   :
+; AUTHOR   : GERARD NAHARRO AND LUCAS ORTIZ
 ; HISTORY  :
 ; =============================================================================
 
@@ -8,16 +8,17 @@
 
 CHARBODY    EQU     31           ;CHARACTER DIMENSIONS
 CHARPCOL    EQU     $00000000    ;CHARACTER PEN COLOR
-;CHARFCOLP   EQU     $00FF00FF    ;CHARACTER FILL COLOR
-;CHARFCOLB   EQU     $00FFFF00    ;CHARACTER FILL COLOR
 EYESIZE     EQU     1            ;CHARACTER'S EYE SIZE
 CHARSPED    EQU     4            ;CHARACTER'S MOVE SPEED
 FLOOR       EQU     439          ;FLOOR POSITION RELATED TO CHARACTER
 CHARJUMP    EQU     38           ;CHARACTER JUMPING
+PINK        EQU     $00FF00FF    ;CHARACTER PINK COLOR
+BLUE        EQU     $00FFFF00    ;CHARACTER BLUE COLOR
 
 ;------------------------------------------------------------------------------
 
 ;----------SHOOTINGS RELATED CONSTANTS-----------------------------------------
+
 SHOTID      EQU     1            ;SHOT IDENTIFIER
 SHOTSPED    EQU     20           ;SHOTS SPEED
 SHOTMAXD    EQU     300          ;SHOTS MAXIMUM DISTANCE
@@ -48,8 +49,8 @@ MOBPCOL  EQU    $00FF0000         ;MOB PEN COLOR
 MOBFCOL  EQU    $000000FF         ;MOB FILL COLOR
 ;-------------------------------------------------------------------------------
 
-PINK    EQU     $00FF00FF
-BLUE    EQU     $00FFFF00
+
+
 
 
 

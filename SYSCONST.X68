@@ -67,8 +67,11 @@ KBDBITF1    EQU     4
 KBDBITF2    EQU     5
 KBDBITF3    EQU     6
 KBDBITPS    EQU     7
-;------------------------------------------------------------------------------
-SYSMOUBU    EQU     %010
+
+;------  MOUSE RELATED CONSTANTS  ---------------------------------------------
+
+SMSBU    EQU     %010
+
 ; --- SCREEN RELATED CONSTANTS ------------------------------------------------
 
 SCRWIDTH    EQU     640                     ; SCREEN WIDTH (PIXELS)
@@ -81,6 +84,7 @@ SCRTIM      EQU     20                      ; SCREEN TIMER (MS)
 DMMBSIZE    EQU     64                      ; BLOCK SIZE (BYTES). POWER OF TWO
 DMMBNUM     EQU     50                      ; NUMBER OF BLOCKS
 DMMSYSID    EQU     0                       ; SYSTEM OWNER ID (MUST BE 0)
+
 
 
 

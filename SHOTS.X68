@@ -1,6 +1,6 @@
 *-----------------------------------------------------------
 * TITLE      : SHOTS MANAGEMENT: IT IS AN AGENT
-* AUTHOT     : GERARD NAHARRO
+* AUTHOT     : GERARD NAHARRO AND LUCAS ORTIZ
 * DATE       : SHOT AGENT LOCAL VARIABLES:
 *               (AO) : SHOTX - WORD       
 *              2(A0) : SHOTY - WORD       
@@ -52,7 +52,6 @@ SHOTUPD
                 BEQ         .NEXT           ;NOT FOUND
                 MOVE.W      8(A0),D1        ;MOB LEFT X
                 MOVE.W      10(A0),D2       ;MOB UPPER Y
-*                ADD.W       #MOBLINE,D1     ;MOB RIGHT X
                 MOVE.W      D2,D3
                 ADD.W       #MOBLINE,D3     ;MOB BOTTOM Y
                
@@ -184,7 +183,6 @@ SHOTPLOT
                 TRAP        #15
                 MOVE.W      (A0),D1        ;INITIAL X
                 MOVE.W      2(A0),D2       ;INITIAL Y
-*                MOVE.W (A0)+#SHOTLONG, D3 
                 MOVE.W      (A0),D3
                 ADD.W       #SHOTLONG,D3     ;FINAL X
                 MOVE.W      2(A0),D4        ;FINAL Y
@@ -196,6 +194,8 @@ SHOTPLOT
                 RTS  
                 
                 
+
+
 
 
 

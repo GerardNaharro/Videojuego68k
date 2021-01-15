@@ -1,6 +1,6 @@
 *-----------------------------------------------------------
 * Title      : LIFE MANAGEMENT
-* Written by : GERARD NAHARRO
+* Written by : GERARD NAHARRO AND LUCAS ORTIZ
 * Date       :
 * Description: 29-12-2020 - CREATION
 *-----------------------------------------------------------
@@ -39,93 +39,93 @@ LIFEPLOT
 ;-----------------------------------------------------------
 
             ;PAINT ALL THE FULL HEARTS
-            MOVEM.L D0-D7/A0-A1,-(A7)      ;STACK REGISTERS
-            SUBQ.B  #1,D6                  ;-1 FOR THE DBRA
-            LEA HEART,A0
-            MOVE.W #601,D3                 ;X WHERE TO STOP PAINTING
-            MOVE.W #19,D4                  ;Y WHERE TO STOP PAINTING
+            MOVEM.L D0-D7/A0-A1,-(A7)  ;STACK REGISTERS
+            SUBQ.B  #1,D6              ;-1 FOR THE DBRA
+            LEA     HEART,A0
+            MOVE.W  #601,D3            ;X WHERE TO STOP PAINTING
+            MOVE.W  #19,D4             ;Y WHERE TO STOP PAINTING
 
-            CLR.L D1
-            CLR.L D2
-            MOVE.W #589,D1                 ;X WHERE TO START PAINTING
-            CLR.L D5
-            MOVE.W D1,D5                   ;COPY THE INITIAL X
-            MOVE.W #9,D2                   ;Y WHERE TO STOP PAINTING
+            CLR.L   D1
+            CLR.L   D2
+            MOVE.W  #589,D1            ;X WHERE TO START PAINTING
+            CLR.L   D5
+            MOVE.W  D1,D5              ;COPY THE INITIAL X
+            MOVE.W  #9,D2              ;Y WHERE TO STOP PAINTING
 
 .LOOP        
            
-            BRA .COLOR                     ;GET THE COLOR
+            BRA     .COLOR             ;GET THE COLOR
 .HERE
-            MOVE.W #82,D0
-            TRAP #15                       ;PAINT
-            ADDQ.W #1,D1                   ;NEXT X PIXEL
-            CMP.W D3,D1                    ;IF NOT THE FINAL X PIXEL CONTINUE
-            BLE .LOOP
-            ADDQ.W #1,D2                   ;NEXT Y PIXEL
-            CLR.L D1            
-            MOVE.W D5,D1                   ;INITIAL X PIXEL
-            CMP.W D4,D2                    ;IF NOT THE FINAL Y PIXEL CONTINUE
-            BLE .LOOP            
-            ADD.W #17,D3                   ;NEXT HEART FINAL X
-            ADD.W #17,D1                   ;NEXT HEART INITIAL X
-            MOVE.W D1,D5                   ;COPY THE INITIAL X
-            MOVE.W #9,D2                   ;NEXT HEART INITIAL Y
-            LEA HEART,A0
-            DBRA D6, .LOOP
-            MOVE.B #3,D7                   ;CHECK IF THERE ARE ANY EMPTY HEARTS (DAMAGED)
-            SUB.B D6,D7
-            TST.B D7
-            BGT .BROKEN                     ;PAINT THEM
-            MOVEM.L (A7)+,D0-D7/A0-A1     ;STORE REGISTERS
+            MOVE.W  #82,D0
+            TRAP    #15                ;PAINT
+            ADDQ.W  #1,D1              ;NEXT X PIXEL
+            CMP.W   D3,D1              ;IF NOT THE FINAL X PIXEL CONTINUE
+            BLE     .LOOP
+            ADDQ.W  #1,D2              ;NEXT Y PIXEL
+            CLR.L   D1            
+            MOVE.W  D5,D1              ;INITIAL X PIXEL
+            CMP.W   D4,D2              ;IF NOT THE FINAL Y PIXEL CONTINUE
+            BLE     .LOOP            
+            ADD.W   #17,D3             ;NEXT HEART FINAL X
+            ADD.W   #17,D1             ;NEXT HEART INITIAL X
+            MOVE.W  D1,D5              ;COPY THE INITIAL X
+            MOVE.W  #9,D2              ;NEXT HEART INITIAL Y
+            LEA     HEART,A0
+            DBRA    D6, .LOOP
+            MOVE.B  #3,D7              ;CHECK IF THERE ARE ANY EMPTY HEARTS (DAMAGED)
+            SUB.B   D6,D7
+            TST.B   D7
+            BGT     .BROKEN            ;PAINT THEM
+            MOVEM.L (A7)+,D0-D7/A0-A1  ;STORE REGISTERS
             RTS
             
 .COLOR
-            MOVE.L D1,-(A7)
-            MOVE.L (A0)+,D1
-            MOVE.W #80,D0
-            TRAP #15
-            MOVE.L (A7)+,D1
-            BRA .HERE
+            MOVE.L  D1,-(A7)
+            MOVE.L  (A0)+,D1
+            MOVE.W  #80,D0
+            TRAP    #15
+            MOVE.L  (A7)+,D1
+            BRA     .HERE
 
 
 
 
-.BROKEN     SUBQ.B #1,D7
-            LEA BRKHEART,A0
+.BROKEN     SUBQ.B  #1,D7
+            LEA     BRKHEART,A0
 
 .LOOP2        
            
-            BRA .COLOR2
+            BRA     .COLOR2
 .HERE2
-            MOVE.W #82,D0
-            TRAP #15
-            ADDQ.W #1,D1
-            CMP.W D3,D1
-            BLE .LOOP2
-            ADDQ.W #1,D2
-            CLR.L D1
+            MOVE.W  #82,D0
+            TRAP    #15
+            ADDQ.W  #1,D1
+            CMP.W   D3,D1
+            BLE     .LOOP2
+            ADDQ.W  #1,D2
+            CLR.L   D1
             
-            MOVE.W D5,D1
+            MOVE.W  D5,D1
 
-            CMP.W D4,D2
-            BLE .LOOP2
+            CMP.W   D4,D2
+            BLE     .LOOP2
             
-            ADD.W #17,D3
-            ADD.W #17,D1
-            MOVE.W D1,D5
-            MOVE.W #9,D2
-            LEA BRKHEART,A0
-            DBRA D7, .LOOP2
+            ADD.W   #17,D3
+            ADD.W   #17,D1
+            MOVE.W  D1,D5
+            MOVE.W  #9,D2
+            LEA     BRKHEART,A0
+            DBRA    D7, .LOOP2
             MOVEM.L (A7)+,D0-D7/A0-A1     ;STORE REGISTERS
             RTS
             
 .COLOR2
-            MOVE.L D1,-(A7)
-            MOVE.L (A0)+,D1
-            MOVE.W #80,D0
-            TRAP #15
-            MOVE.L (A7)+,D1
-            BRA .HERE2
+            MOVE.L  D1,-(A7)
+            MOVE.L  (A0)+,D1
+            MOVE.W  #80,D0
+            TRAP    #15
+            MOVE.L  (A7)+,D1
+            BRA     .HERE2
 
 
             
@@ -172,6 +172,8 @@ BRKHEART  DC.L    $00333,$00111,$00111,$00000,$00000,$00000,$00222,$00000,$00222
 
 
          
+
+
 
 
 *~Font name~Fixedsys~

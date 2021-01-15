@@ -22,15 +22,19 @@ KBDEDGE     DS.B    1                       ; KEY CHANGED=1
 SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
 SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
             DS.W    0
-;
-;MSPOS
-;MSY         DS.W
-;MSX         DS.W
+            
+; --- MOUSE RELATED VARIABLES -------------------------------------------------
+
+MSPOS
+MSY         DS.W    1                       ; MOUSE Y COORDINATE
+MSX         DS.W    1                       ; MOUSE X COORDINATE
+
 ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
 
             ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
 DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
             DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+
 
 *~Font name~Fixedsys~
 *~Font size~9~

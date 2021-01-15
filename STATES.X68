@@ -90,7 +90,7 @@ STAINTRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            JSR INTROSND
+            JSR     INTROSND
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
             MOVE.W  #STACCS,(STANEXT)
@@ -107,9 +107,7 @@ STAINTRP
 
             MOVEM.L  D0-D4/A0-A1,-(A7)      ;STACK REGISTERS
             LEA      BITMAP,A0
-*            MOVE.W #$FF00,D1
-*            MOVE.W #11,D0
-*            TRAP #15
+
             MOVE.W  #418,D3  
             MOVE.W  #258,D4  
             CLR.L   D1
@@ -141,15 +139,15 @@ STAINTRP
             BRA     .HERE
 
 
-.PUSH       BTST.B  #2,(SCRCYCCT)            ;16 CYCLES
+.PUSH       BTST.B  #2,(SCRCYCCT)            ;4 CYCLES
             BEQ     .END
 
             MOVE.W  #((80-14)/2)<<8|25,D1    ;FIRST TEXT COORDINATES
             MOVE.B  #11,D0
-            TRAP    #15                        ;LOCATE TEXT CURSOR
-            LEA     .STR0,A1                    ;STRING POINTER
+            TRAP    #15                      ;LOCATE TEXT CURSOR
+            LEA     .STR0,A1                 ;STRING POINTER
             MOVE.B  #13,D0
-            TRAP    #15                        ;PRINT
+            TRAP    #15                      ;PRINT
             
 .END        MOVEM.L (A7)+,D0-D4/A0-A1
             RTS
@@ -160,38 +158,41 @@ STAINTRP
 
 ;------------------------------------------------------------------------------
 STACCSI
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ;------------------------------------------------------------------------------
            
         RTS
 ;------------------------------------------------------------------------------
 STACCSU
 ;GAME COLOR SELECTOR UPDATE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ;------------------------------------------------------------------------------
         MOVEM.L D0-D2,-(A7)
         MOVE.W  (MSY),D2
         MOVE.W  (MSX),D0
-        CMPI.W #200,D2                    ;IF MSY<200, GO TO .END
-        BLT .END
-        CMPI.W #300,D2                    ;IF MSY>300, GO TO .END
-        BGT .END
-        CMPI.W #200,D0                    ;IF MSX<200, GO TO .END
-        BLT .END
-        CMPI.W #300,D0                    ;IF MSX>300, GO TO .NEXT
-        BGT .NEXT
-        MOVE.L #PINK,(CHARFCOL)           ;MOVE PINK TO CHARFCOL
-        BRA .END1                         
+        CMPI.W  #200,D2                    ;IF MSY<200, GO TO .END
+        BLT     .END
+        CMPI.W  #300,D2                    ;IF MSY>300, GO TO .END
+        BGT     .END
+        CMPI.W  #200,D0                    ;IF MSX<200, GO TO .END
+        BLT     .END
+        CMPI.W  #300,D0                    ;IF MSX>300, GO TO .NEXT
+        BGT     .NEXT
+        MOVE.L  #PINK,(CHARFCOL)           ;MOVE PINK TO CHARFCOL
+        BRA     .END1                         
 .NEXT
-        CMPI.W #350,D0                    ;IF MSX<350, GO TO .END
-        BLT .END
-        CMPI.W #450,D0                    ;IF MSX>450, GO TO .END
-        BGT .END
-        MOVE.L #BLUE,(CHARFCOL)           ;MOVE BLUE TO CHARFCOL
+        CMPI.W  #350,D0                    ;IF MSX<350, GO TO .END
+        BLT     .END
+        CMPI.W  #450,D0                    ;IF MSX>450, GO TO .END
+        BGT     .END
+        MOVE.L  #BLUE,(CHARFCOL)           ;MOVE BLUE TO CHARFCOL
                                           
 .END1
-        CLR.L   D0
-        CLR.L   D1
-*        MOVE.W  #60,D0
-*        TRAP    #15
+        CLR.L   MSPOS
         MOVE.W  #STAMAP1,(STANEXT)
             
 .END            
@@ -200,22 +201,25 @@ STACCSU
 ;------------------------------------------------------------------------------
 STACCSP
 ;GAME COLOR SELECTOR PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ;------------------------------------------------------------------------------
-        MOVEM.L D0-D4/A1,-(A7)
-        MOVE.W  #((80-16)/2)<<8|8,D1  ;TEXT .TITLE
-        MOVE.B  #11,D0
-        TRAP    #15
-        LEA     .TITLE,A1
-        MOVE.B  #13,D0
-        TRAP    #15
-        MOVE.W  #((80-40)/2)<<8|10,D1 ;TEXT .TITLE2
-        MOVE.B  #11,D0
-        TRAP    #15
-        LEA     .TITLE2,A1
-        MOVE.B  #13,D0
-        TRAP    #15
+        MOVEM.L     D0-D4/A1,-(A7)
+        MOVE.W      #((80-16)/2)<<8|8,D1  ;TEXT .TITLE
+        MOVE.B      #11,D0
+        TRAP        #15
+        LEA         .TITLE,A1
+        MOVE.B      #13,D0
+        TRAP        #15
+        MOVE.W      #((80-40)/2)<<8|10,D1 ;TEXT .TITLE2
+        MOVE.B      #11,D0
+        TRAP        #15
+        LEA         .TITLE2,A1
+        MOVE.B      #13,D0
+        TRAP        #15
         MOVE.B      #80,D0            ;LEFT SQUARE
-        MOVE.L      #MOBPCOL,D1
+        MOVE.L      #CHARPCOL,D1
         TRAP        #15
         ADDQ.B      #1,D0
         MOVE.L      #PINK,D1
@@ -235,7 +239,7 @@ STACCSP
         MOVE.L      #00000000,D1      ;FILL COLOR BLACK
         TRAP        #15
         MOVE.B      #80,D0            ;RIGHT SQUARE
-        MOVE.L      #MOBPCOL,D1
+        MOVE.L      #CHARPCOL,D1
         TRAP        #15
         ADDQ.B      #1,D0
         MOVE.L      #BLUE,D1
@@ -254,7 +258,7 @@ STACCSP
         ADDQ.B      #1,D0
         MOVE.L      #00000000,D1      ;FILL COLOR BLACK
         TRAP        #15
-        MOVEM.L (A7)+,D0-D4/A1
+        MOVEM.L     (A7)+,D0-D4/A1
         RTS
 .TITLE  DC.B    'CHOOSE  YOUR COLOR',0
 .TITLE2 DC.B    'USE THE MOUSE AND THEN PRESS LEFT CLICK ',0
@@ -321,7 +325,7 @@ STAMAP1U
             MOVE.L  D0,-(A7)
             JSR     CHARUPD
             JSR     AGLUPD
-            MOVE.W  (MOBNUM),D0   ;IF NO ENEMIES LEFT
+            MOVE.W  (MOBNUM),D0    ;IF NO ENEMIES LEFT
             CMP.W   #0,D0
             BEQ     .NEXTMAP1      ;GO TO NEXT MAP
             MOVE.L (A7)+,D0
@@ -364,7 +368,7 @@ STAMAP2I
             JSR       DMMNEXTO
             BRA       .LOOP
             
-.NEXT       JSR CHARINIT
+.NEXT       JSR      CHARINIT
             
             MOVE.W   #34,(MOBY)
             MOVE.W   #300,(MOBX)
@@ -445,7 +449,7 @@ STAMAP3I
             JSR       DMMNEXTO
             BRA       .LOOP
             
-.NEXT       JSR CHARINIT
+.NEXT       JSR      CHARINIT
             
             MOVE.W   #226,(MOBY)
             MOVE.W   #63,(MOBX)
@@ -528,7 +532,7 @@ STAMAP4I
             JSR       DMMNEXTO
             BRA       .LOOP
             
-.NEXT       JSR CHARINIT
+.NEXT       JSR      CHARINIT
             
             MOVE.W   #354,(MOBY)
             MOVE.W   #475,(MOBX)
@@ -609,7 +613,7 @@ STAMAP5I
             JSR       DMMNEXTO
             BRA       .LOOP
             
-.NEXT       JSR CHARINIT
+.NEXT       JSR      CHARINIT
             
             MOVE.W   #418,(MOBY)
             MOVE.W   #97,(MOBX)
@@ -698,7 +702,7 @@ STAMAP6I
             JSR       DMMNEXTO
             BRA       .LOOP
             
-.NEXT       JSR CHARINIT
+.NEXT       JSR      CHARINIT
             
             MOVE.W   #418,(MOBY)
             MOVE.W   #330,(MOBX)
@@ -773,38 +777,38 @@ STAGOVRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L  D0/A1,-(A7)            ;STACK REGISTERS
+            MOVEM.L     D0/A1,-(A7)            ;STACK REGISTERS
             MOVE.B      #80,D0
-            MOVE.L      #0,D1                   ;PEN COLOR BLACK
+            MOVE.L      #0,D1                  ;PEN COLOR BLACK
             TRAP        #15
             ADDQ.B      #1,D0
-            MOVE.L      #0,D1                   ;FILL COLOR BLACK
+            MOVE.L      #0,D1                  ;FILL COLOR BLACK
             TRAP        #15
-            MOVE.W #((80-10)/2)<<8|10,D1    ;FIRST TEXT COORDINATES
-            MOVE.B #11,D0
-            TRAP #15                        ;LOCATE TEXT CURSOR
-            LEA .STR0,A1                    ;STRING POINTER
-            MOVE.B #13,D0
-            TRAP #15                        ;PRINT
+            MOVE.W      #((80-10)/2)<<8|10,D1  ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                    ;LOCATE TEXT CURSOR
+            LEA         .STR0,A1               ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15                    ;PRINT
             
-            MOVE.W #((80-26)/2)<<8|12,D1    ;FIRST TEXT COORDINATES
-            MOVE.B #11,D0
-            TRAP #15                        ;LOCATE TEXT CURSOR
-            LEA .STR1,A1                    ;STRING POINTER
-            MOVE.B #13,D0
-            TRAP #15                        ;PRINT
+            MOVE.W      #((80-26)/2)<<8|12,D1  ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                    ;LOCATE TEXT CURSOR
+            LEA         .STR1,A1               ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15                    ;PRINT
             
-            BTST.B #3,(SCRCYCCT)            ;16 CYCLES
-            BEQ .END
+            BTST.B      #3,(SCRCYCCT)          ;16 CYCLES
+            BEQ         .END
             
-            MOVE.W #((80-14)/2)<<8|25,D1    ;FIRST TEXT COORDINATES
-            MOVE.B #11,D0
-            TRAP #15                        ;LOCATE TEXT CURSOR
-            LEA .STR2,A1                    ;STRING POINTER
-            MOVE.B #13,D0
-            TRAP #15 
+            MOVE.W      #((80-14)/2)<<8|25,D1  ;FIRST TEXT COORDINATES
+            MOVE.B      #11,D0
+            TRAP        #15                    ;LOCATE TEXT CURSOR
+            LEA         .STR2,A1               ;STRING POINTER
+            MOVE.B      #13,D0
+            TRAP        #15 
             
-.END        MOVEM.L  (A7)+,D0/A1            ;STORE REGISTERS
+.END        MOVEM.L     (A7)+,D0/A1            ;STORE REGISTERS
             RTS
 .STR0   DC.B    'GAME  OVER',0
 .STR1   DC.B    'YOU DIDN',39,'T  SAVE THE WORLD',0
@@ -1736,6 +1740,8 @@ BITMAP
     DC.L    $00020,$00030,$00010,$00010,$00010,$00010,$00010,$00386,$00020
     DC.L    $00020,$00085,$00020,$00030,$00020,$00000,$00000,$00000,$00000
     DC.L    $00000,$00000,$00000,$00000
+
+
 
 
 

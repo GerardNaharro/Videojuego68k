@@ -1,7 +1,7 @@
 *-----------------------------------------------------------
 * Title      : MOB MANAGEMENT(AGENT)
-* AUTHOR     :  Gerard y Lucas
-* COMMENTS   :  MOB VAR.
+* AUTHOR     : GERARD NAHARRO AND LUCAS ORTIZ
+* COMMENTS   : MOB VAR.
 *                (A0)=X
 *               2(A0)=Y
 *               4(A0)=INITIAL X
@@ -16,7 +16,7 @@ MOBINIT
 ;OUTPUT     -   NONE
 ;MODIFIES   -   NONE
 ;----------------------------------------------------------
-            MOVEM.L  D1-D2,-(A7)       ;STACK REGISTER
+            MOVEM.L  D1-D2,-(A7)     ;STACK REGISTER
             MOVE.W   (MOBY),D1
             MOVE.W   D1,2(A0)
             MOVE.W   (MOBX),D2
@@ -115,7 +115,7 @@ MOBUPDM
 ;OUTPUT     -   NONE
 ;MODIFIES   -   NONE
 ;----------------------------------------------------------
-             MOVEM.L  D1-D5,-(A7)            ;STACK REGISTER
+             MOVEM.L  D1-D5,-(A7)           ;STACK REGISTER
             
             MOVE.W  (CHARX),D4              ;LEFT CHAR X
             MOVE.W  (CHARY),D5              ;UPPER CHAR Y
@@ -270,30 +270,34 @@ MOBUPDL
 .AVOLVER    MOVE.W  #1,6(A0)            
             BRA     .END             
 ;----------------------------------------------------------
-
 MOBPLOT
+;PLOTS THE MOB
+;
+;INPUT      -   NONE          
+;OUTPUT     -   NONE
+;MODIFIES   -   NONE
 ;----------------------------------------------------------
-            MOVEM.L     D0-D4,-(A7)
-            MOVE.B      #80,D0
-            MOVE.L      #MOBPCOL,D1
-            TRAP        #15
-            ADDQ.B      #1,D0
-            MOVE.L      #MOBFCOL,D1
-            TRAP        #15
-            MOVE.W      (A0),D1
-            MOVE.W      2(A0),D2
-            MOVE.W      D1,D3
-            MOVE.W      D2,D4
-            ADD.W       #MOBLINE,D3
-            ADD.W       #MOBLINE,D4
-            MOVE.B      #87,D0
-            TRAP        #15               ;DRAW SQUARE
-            MOVE.B      #80,D0
-            MOVE.L      #00000000,D1      ;PEN COLOR BLACK
-            TRAP        #15
-            ADDQ.B      #1,D0
-            MOVE.L      #00000000,D1      ;FILL COLOR BLACK
-            TRAP        #15
+            MOVEM.L D0-D4,-(A7)
+            MOVE.B  #80,D0
+            MOVE.L  #MOBPCOL,D1
+            TRAP    #15
+            ADDQ.B  #1,D0
+            MOVE.L  #MOBFCOL,D1
+            TRAP    #15
+            MOVE.W  (A0),D1
+            MOVE.W  2(A0),D2
+            MOVE.W  D1,D3
+            MOVE.W  D2,D4
+            ADD.W   #MOBLINE,D3
+            ADD.W   #MOBLINE,D4
+            MOVE.B  #87,D0
+            TRAP    #15               ;DRAW SQUARE
+            MOVE.B  #80,D0
+            MOVE.L  #00000000,D1      ;PEN COLOR BLACK
+            TRAP    #15
+            ADDQ.B  #1,D0
+            MOVE.L  #00000000,D1      ;FILL COLOR BLACK
+            TRAP    #15
             
             ;LEFT EYE
             MOVE.B  #81,D0
@@ -348,6 +352,8 @@ MOBPLOT
             
             
             
+
+
 
 
 

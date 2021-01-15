@@ -99,10 +99,17 @@ SCRUPD
 ; =============================================================================
 ;------------------------------------------------------------------------------
 MSINIT
-;------------------------------------------------------------------------------
+; INITIALIZES THE SYSTEM VARIABLES MSX AND MSY.
+; INITIALIZES THE MOUSE.
+; ENABLES
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
         MOVEM.L  D0-D1,-(A7)
+        CLR.L   MSPOS                  ; INIT VARS MSX AND MSY
         MOVE.B  #60,D0                 ; INIT MOUSE    
-        MOVE.W  #2<<8|SYSMOUBU,D1
+        MOVE.W  #2<<8|SMSBU,D1
         TRAP    #15
         MOVE.L  #MSREAD,($60+2*4)
         MOVEM.L  (A7)+,D0-D1
@@ -112,17 +119,19 @@ MSINIT
 MSREAD
 ;------------------------------------------------------------------------------
 ; TRAP SERVICE ROUTINE.
+; UPDATES THE SYSTEM VARIABLES MSX AND MSY ACCORDING TO THE MOUSE POSITION WHEN
+; RIGTH OR LEFT CLICKED.
 ; INPUT    - NONE
-; OUTPUT   - (MSX) AND (MSY)
+; OUTPUT   - MSX AND MSY
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
            MOVEM.L  D0-D1,-(A7)
-           MOVE.B  #61,D0
+           MOVE.B  #61,D0           ; READ MOUSE COORDINATES
            CLR.B   D1
            TRAP    #15
            MOVE.L  D1,(MSPOS)
 ;.END
-           MOVEM.L  (A7)+,D0-D1
+           MOVEM.L (A7)+,D0-D1
            RTE
 ; =============================================================================
 ; KEYBOARD MANAGEMENT (SYSTEM CODE)
@@ -296,6 +305,8 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
+
+
 
 
 

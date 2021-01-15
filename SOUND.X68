@@ -1,6 +1,6 @@
 ; =============================================================================
 ; TITLE    : SOUNDS MANAGEMENT
-; AUTHOR   : GERARD NAHARRO
+; AUTHOR   : GERARD NAHARRO AND LUCAS ORTIZ
 ; HISTORY  : 28-12-2020 - CREATION
 ; =============================================================================
 
@@ -19,7 +19,6 @@ SNDINIT
             MOVE.B  #0,D1
             MOVE.B  #6,D2
             MOVE.B  #71,D0
-*            MOVE.B  #74,D0
 .HERE       ADDQ.W  #1,D1
             MOVE.L  (A2)+,D3
             MOVE.L  D3,A1
@@ -51,7 +50,6 @@ SHOTSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #1,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -66,7 +64,6 @@ JUMPSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #2,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -81,7 +78,6 @@ INTROSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #3,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS    
@@ -96,7 +92,6 @@ MOBDSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #4,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS
@@ -111,7 +106,6 @@ GOVERSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #5,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS   
@@ -126,7 +120,6 @@ CHARDSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #6,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS 
@@ -141,10 +134,11 @@ NXTLVSND
             MOVEM.L  D0-D1,-(A7)
             MOVE.B   #7,D1
             MOVE.B  #72,D0
-*            MOVE.B  #73,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D1
             RTS            
+
+
 
 
 
